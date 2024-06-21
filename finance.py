@@ -13,12 +13,12 @@ def run(playwright: Playwright):
     page.goto(start_url)
     # page.wait_for_load_state("networkidle")
     time.sleep(4)
-    for x in range(1, 15):
+    for x in range(1, 5):
         page.keyboard.press("End")
         print(f"scrolling {x} times")
         time.sleep(2)
-        page.click("[id^='readMoreBtn']")
-        time.sleep(2)
+        page.click("[class=\"mvp-inf-more-but\"]")
+        time.sleep(3)
         blog_soup = BeautifulSoup(page.content(), 'lxml')
 
         blog_articles = blog_soup.find_all('li', class_='mvp-blog-story-wrap left relative infinite-post')
@@ -28,17 +28,17 @@ def run(playwright: Playwright):
             blog_link = blog.find('a', rel='bookmark')['href']
             blog_img = blog.find('img')['src']
             try:
-                blog_category = blog.find('span', class_='post-card-tags').text.strip()
+                blog_category = blog.find('span', class_='mvp-cd-cat left relative').text.strip()
             except AttributeError:
                 pass
             blog_info.append({
                 'blog_name': blog_name,
                 'blog_category': blog_category,
-                'blog_link': 'https://www.freecodecamp.org' + blog_link,
+                'blog_link': blog_link,
                 'blog_img': blog_img
             })
     print(blog_info)
-    with open ('tech_blog.json', 'w') as fp:
+    with open ('Finance_blog.json', 'w') as fp:
         json.dump(blog_info, fp, indent=4)
         fp.close()
         print("Done ! , Json file created successfully ......")
